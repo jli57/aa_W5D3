@@ -1,9 +1,10 @@
 require 'rack'
 require_relative '../lib/controller_base'
+require 'byebug'
 
 class MyController < ControllerBase
   def go
-    render :show
+    render :index
   end
 end
 
