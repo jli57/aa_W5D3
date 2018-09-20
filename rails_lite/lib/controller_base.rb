@@ -13,6 +13,7 @@ class ControllerBase
     @req = req
     @res = res
     @already_built_response = false 
+
   end
 
   # Helper method to alias @already_built_response
@@ -26,6 +27,7 @@ class ControllerBase
     
     @res.status = 302
     @res['Location'] = url
+    session.store_session(@res)
     @already_built_response = true 
     nil
   end
@@ -38,6 +40,7 @@ class ControllerBase
 
     @res.write(content)
     @res['Content-Type'] = content_type
+    session.store_session(@res)
     @already_built_response = true
   end
 
@@ -46,7 +49,7 @@ class ControllerBase
   def render(template_name)
 
     dir_path = File.dirname(__FILE__)[0..-4]
-  
+    
     template_path = File.join(dir_path,
       "views",
       "#{self.class.name.underscore}", 
@@ -60,6 +63,7 @@ class ControllerBase
 
   # method exposing a `Session` object
   def session
+    @session ||= Session.new(@req)
   end
 
   # use this with the router to call action_name (:index, :show, :create...)
